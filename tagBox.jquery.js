@@ -11,6 +11,7 @@
   var defaults = {
       maxSuggestion: 9,
       maxTags: 5,
+      multipleOccurence: false,
       template: "<div class='suggestionBlockTagName'>${tagName}</div><div class='suggestionBlockTagDesc'>${tagDesc}</div>"
   };
 
@@ -18,14 +19,12 @@
 
   return this.each(function() {
         var obj = $(this);
-          $.getScript('http://ajax.microsoft.com/ajax/jquery.templates/beta1/jquery.tmpl.min.js', function() {
-
-          });
+        $.getScript('http://ajax.microsoft.com/ajax/jquery.templates/beta1/jquery.tmpl.min.js');
+        var validList = [];
         var MYAPP = {};
         MYAPP.dom = {};
         MYAPP.methods = {};
-        MYAPP.dom.TextBox = function()
-        {
+        MYAPP.dom.TextBox = function(){
             var element = $('<input>');
             element.type = 'text';
             element.attr('placeholder', 'Type your tag here');
@@ -36,7 +35,8 @@
                             if(element.val().length > 0){
                                 for(var a = 0; a < config.maxSuggestion; a++)
                                     {
-                                        var spanBox =  new MYAPP.dom.SPAN();
+                                        var spanBox =  new MYAPP.dom.SPAN(dummyList[a].id);
+                                        spanBox.attr('id', dummyList[a].id);
                                         var aElement = MYAPP.dom.LINK(spanBox.id);
 
                                         // create a LI
@@ -53,10 +53,15 @@
             return element;
         };
 
-        MYAPP.dom.TagBoxDiv = $("#tagBoxDiv");// document.getElementById('tagBoxDiv');
+        MYAPP.dom.HiddenInput = function(){
+            var element = $('<input>');
+            element.attr('type','hidden').attr('id', 'tagBoxHiddenInput').attr('value', '');
+            return element;
+        }
 
-        MYAPP.dom.SuggestionBlock = function()
-        {
+        MYAPP.dom.TagBoxDiv = $("#tagBoxDiv");
+
+        MYAPP.dom.SuggestionBlock = function(){
             var element = $('<div></div>');
             element.attr('className', 'suggestionBlockClass');
             return element;
@@ -64,49 +69,57 @@
 
         MYAPP.dom.UL = $('<ul></ul>');
 
-        MYAPP.dom.SPAN = function()
-        {
+        MYAPP.dom.SPAN = function(id){
             var element = $('<span></span>');
-            var spanId = Math.random().toString().replace('.', '');
-            element.id = spanId;
-            element.attr('id', spanId);
+            element.id = id;
+            element.attr('id', id);
             return element;
         }
 
-        MYAPP.dom.LI = function(newnode, oldnode)
-        {
-            var tagBoxDiv = MYAPP.dom.DIV();
+        MYAPP.dom.LI = function(newnode, oldnode){
             var element = $('<li></li>');
             element.attr('className','nav');
             element.bind('click', function(data){
                             MYAPP.dom.UL.empty();
-                            var spanBox =  new MYAPP.dom.SPAN();
-                            var aElement = MYAPP.dom.LINK(spanBox.id);
-                            spanBox.html(data.tagName);
-                            spanBox.append(aElement);
+                            newnode.html(data.tagName);
                             oldnode.val('');
-                            MYAPP.dom.TagBoxDiv.children().length-1 <= config.maxTags ?
-                                newnode.insertBefore(oldnode) :
-                                null;
+                            if(MYAPP.methods.IsValid(newnode.id)){
+                                newnode.insertBefore(oldnode)
+                            }
                         });
             return element;
         };
 
-        MYAPP.dom.CustomDIV = function(classname, textContext)
-        {
+        MYAPP.methods.IsValid = function(source){
+            var isValid = true;
+            var hidden = $("#tagBoxHiddenInput");
+            for(var a in validList){
+                if(validList[a] == source)
+                {
+                    isValid = false;
+                }
+            }
+            if(isValid) {
+                validList.push(source)
+                hidden.attr('value', validList.join());
+            };
+
+            return (isValid || config.multipleOccurence) &&
+                MYAPP.dom.TagBoxDiv.find('span').length +1 <= config.maxTags;
+        }
+
+        MYAPP.dom.CustomDIV = function(classname, textContext){
             var element = $('<div></div>');
             element.attr('className', classname);
             element.html(textContext);
             return element;
         }
 
-        MYAPP.dom.DIV = function()
-        {
-            return $("#tagBoxDiv");// document.getElementById('tagBoxDiv');
+        MYAPP.dom.DIV = function(){
+            return $("#tagBoxDiv");
         }
 
-        MYAPP.dom.LINK = function(id)
-        {
+        MYAPP.dom.LINK = function(id){
             var element = $('<a></a>');
             element.attr('href','javascript:void(0)');
             element.attr('className','delete');
@@ -114,8 +127,7 @@
             return element;
         }
 
-        MYAPP.methods.GetList = function()
-        {
+        MYAPP.methods.GetList = function(){
           var result = [];
             $.ajax({
                    async:false,
@@ -128,16 +140,25 @@
           return result;
         }
 
-        MYAPP.methods.ClearNode = function(source)
-        {
+        Array.prototype.remove = function(e) {
+          var t, _ref;
+          if ((t = this.indexOf(e)) > -1) {
+              return ([].splice.apply(this, [t, t - t + 1].concat(_ref = [])), _ref);
+          }
+        };
+
+        MYAPP.methods.ClearNode = function(source){
             var tagBoxDiv = MYAPP.dom.DIV();
-            var node = $("#" + source);// document.getElementById(source);
             tagBoxDiv.find('span#'+source).remove();
+            validList.remove(source);
         }
 
         MYAPP.init = (function(){
              // Create main div that holds the tags
             var tagBoxDiv = MYAPP.dom.DIV();
+
+            // Create hidden input
+            var hidden = new MYAPP.dom.HiddenInput();
 
             // Create SuggestionBlock
             var suggestionBlock = MYAPP.dom.SuggestionBlock();
@@ -148,11 +169,9 @@
             suggestionBlock.append(ulElement);
 
             obj.append(tagBox);
+            obj.append(hidden);
             obj.append(suggestionBlock);
         })();
-
-
   });
-
  };
 })(jQuery);
