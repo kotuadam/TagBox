@@ -1,0 +1,85 @@
+#tagBoxDiv
+{
+	padding: 10px;
+	border: 1px solid #B4B4B4;
+	width: 730px;
+}
+#tagBoxDiv INPUT
+{
+	margin: 3px 0 3px 5px;
+	padding: 3px 19px 3px 6px;
+	background: transparent none repeat scroll 0 0 !important;
+	border: 0 none #000000 !important;
+	box-shadow: none;
+	color: #666666;
+	margin: 1px 0;
+	outline: 0 none #000000;
+	padding: 5px;
+	color: #111111 !important;
+	clear: both;
+	position: static;
+}
+#tagBoxDiv SPAN
+{
+	background-clip: padding-box;
+	background-color: #E4E4E4;
+	background-image: -moz-linear-gradient(center bottom , #E4E4E4 0%, #EEEEEE 70%);
+	border: 1px solid #B4B4B4;
+	border-radius: 3px 3px 3px 3px;
+	color: #333333;
+	position: relative;
+	padding: 3px 19px 3px 6px;
+	line-height: 35px;
+	margin: 3px 0 3px 5px;
+}
+#tagBoxDiv UL
+{
+	margin: 0px;
+	width: auto;
+}
+#tagBoxDiv LI.nav
+{
+	list-style: none;
+	padding: 5px;
+	margin: 5px;
+	cursor: pointer;
+	border: 1px solid #E9E9E9;
+	border-radius: 5px;
+	width: 200px;
+	display: inline-block;
+	/*+placement:shift -22px -2px;*/
+	position: relative;
+	left: -22px;
+	top: -2px;
+}
+#tagBoxDiv LI.nav:hover
+{
+	background-color: #C3C3C3;
+}
+#tagBoxDiv .delete
+{
+	background: transparent url("images/delete.png") no-repeat scroll right top;
+	display: block;
+	font-size: 1px;
+	height: 13px;
+	position: absolute;
+	right: 3px;
+	top: 4px;
+	width: 12px;
+}
+#tagBoxDiv .suggestionBlockClass
+{
+	width: auto;
+	position: static;
+	height: auto;
+	padding: 5px;
+	margin: 5px;
+}
+#tagBoxDiv .suggestionBlockTagDesc
+{
+	padding: 3px 27px 27px 7px;
+}
+#tagBoxDiv .suggestionBlockTagName
+{
+	padding: 6px 27px 0px 6px;
+}
