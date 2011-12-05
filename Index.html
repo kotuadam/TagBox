@@ -13,12 +13,11 @@
 <div id='tagBoxDiv'></div>
 
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
-<script src="http://ajax.cdnjs.com/ajax/libs/json2/20110223/json2.js"></script>
-<script type="text/javascript" src="http://ajax.microsoft.com/ajax/jquery.templates/beta1/jquery.tmpl.min.js"></script>
 <script src="tagBox.jquery.js"></script>
+
 <script type="text/javascript">
   $(document).ready(function() {
-   $('#tagBoxDiv').tagBox({ template: "${tagName}${tagDesc}", maxSuggestion:6, maxTags:5 });
+   $('#tagBoxDiv').tagBox({ maxSuggestion:6, maxTags:5 });
   });
  </script>
 </body>

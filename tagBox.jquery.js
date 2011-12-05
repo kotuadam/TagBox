@@ -18,6 +18,9 @@
 
   return this.each(function() {
         var obj = $(this);
+          $.getScript('http://ajax.microsoft.com/ajax/jquery.templates/beta1/jquery.tmpl.min.js', function() {
+
+          });
         var MYAPP = {};
         MYAPP.dom = {};
         MYAPP.methods = {};
